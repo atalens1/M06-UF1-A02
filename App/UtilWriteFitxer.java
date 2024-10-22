@@ -1,10 +1,13 @@
 package App;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
 import Model.Article;
@@ -99,5 +102,28 @@ public class UtilWriteFitxer {
             e.printStackTrace();
         }
 
-    }    
+    }
+    
+    public void SerilitzarAleatori (Encarrec encarrec, String fileName) {
+
+        try (RandomAccessFile rafenc1 = new RandomAccessFile(fileName, "rw");
+            ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
+            ObjectOutputStream objectOut = new ObjectOutputStream(byteArrayOut)) {
+
+            objectOut.writeObject(encarrec);
+            //veure necessitat de fer el flush
+            objectOut.flush();
+            byte[] encarrecBytes = byteArrayOut.toByteArray();
+
+            rafenc1.write(encarrecBytes);
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
 }
