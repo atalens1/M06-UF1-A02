@@ -2,10 +2,10 @@ package Model;
 
 public class Article {
 
-    String nomArticle;
-    float nombreUnitats;
-    String tipusUnitat;
-    float preuUnitat;
+    private String nomArticle;
+    private float nombreUnitats;
+    private String tipusUnitat;
+    private float preuUnitat;
 
     public Article () {
     
@@ -70,6 +70,14 @@ public class Article {
         ValidatenomArticle(nomArticle);
         
         this.nomArticle = nomArticle;
+    }
+
+    public float getPreuUnitat() {
+        return preuUnitat;
+    }
+
+    public void setPreuUnitat(float preuUnitat) {
+        this.preuUnitat = preuUnitat;
     }
 
     @Override

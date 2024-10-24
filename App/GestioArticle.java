@@ -38,8 +38,12 @@ public class GestioArticle {
             System.out.println("Quina unitat (indicar Kg, g, ... o simplement u per unitats)? :");
 
             String unitat = reader.readLine();
+
+            System.out.println("Preu unitari (per unitat, Kg, ..) en euros? :");
+
+            float preu = Float.parseFloat(reader.readLine());
     
-            Article article = new Article(nomArticle,quantitat, unitat);
+            Article article = new Article(nomArticle,quantitat, unitat, preu);
     
             LlistaArticle.add(article);
 

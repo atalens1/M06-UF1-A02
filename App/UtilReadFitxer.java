@@ -7,9 +7,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
 import Model.Article;
+import Model.Encarrec;
 
 public class UtilReadFitxer {
 
@@ -39,11 +42,17 @@ public class UtilReadFitxer {
                     a1.setnombreUnitats(Float.parseFloat(contingut[j]));
                     j++;
                     a1.settipusUnitat(contingut[j]);
+                    j++;
+                    a1.setPreuUnitat(Float.parseFloat(contingut[j]));
                     articles.add(a1);
                     j++;
                 }
 
-                FormatEncarrec(nomCli, telCli, dataEncarrec,articles);
+                Float preuTotal = Float.parseFloat(contingut[j]);
+
+                Encarrec enc = new Encarrec(nomCli, telCli, dataEncarrec, articles, preuTotal);
+
+                FormatEncarrec(enc);
             } 
 
         } catch (FileNotFoundException fn) {
@@ -60,9 +69,12 @@ public class UtilReadFitxer {
 
         try (DataInputStream diStr1 = new DataInputStream(new FileInputStream(filInputName))) {
 
+            float preuTotal = 0;
+
             String nomCli = diStr1.readUTF();
             String telCli = diStr1.readUTF();
             String dataEncarrec = diStr1.readUTF();
+
 
             try{
 
@@ -70,11 +82,17 @@ public class UtilReadFitxer {
                     String nomArticle = diStr1.readUTF();
                     float quantitat = diStr1.readFloat();
                     String unitat = diStr1.readUTF();
-                    Article art = new Article(nomArticle,quantitat,unitat);
-                    articles.add(art);   
+                    float preuUnitat = diStr1.readFloat();
+                    Article art = new Article(nomArticle,quantitat,unitat,preuUnitat);
+                    articles.add(art);
+                    if (diStr1.readFloat() != 0) {
+                        preuTotal = diStr1.readFloat();
+                    }
                 }
 
-                FormatEncarrec(nomCli, telCli, dataEncarrec,articles);
+                Encarrec enc = new Encarrec(nomCli, telCli, dataEncarrec, articles, preuTotal);
+
+                FormatEncarrec(enc);
 
             } catch (EOFException e) {
                 System.out.println("Final de fitxer");
@@ -86,21 +104,146 @@ public class UtilReadFitxer {
 
     }
 
-    public static void FormatEncarrec(String nomCli, String telCli, String dataEncarrec, ArrayList<Article> articles) {
+    public void ModificarEncarrec(String folder, String fileName, String nouTel, String novaData) {
+
+        int pos = 0;
+        boolean delimArticles = false;
+
+        try (RandomAccessFile ram1 = new RandomAccessFile(fileName, "rw")) {
+
+            while(ram1.getFilePointer() != ram1.length()){
+
+                ram1.seek(pos);
+
+                char nomC[] = new char[50];
+
+                for (int i = 0; i<nomC.length; i++) {
+                    ram1.readChar();
+                }
+
+                if (nouTel != "") {
+                    StringBuffer sbf1 = new StringBuffer(nouTel);
+                    sbf1.setLength(12);
+                    ram1.writeChars(sbf1.toString());
+                } else {
+                    char telC[] = new char[12];
+
+                    for (int i = 0; i<telC.length; i++) {
+                        ram1.readChar();
+                    }
+    
+                }
+
+                if (novaData != "") {
+                    StringBuffer sbf1 = new StringBuffer(novaData);
+                    sbf1.setLength(12);
+                    ram1.writeChars(sbf1.toString());
+                } else {
+
+                    char datEn[] = new char[12];
+
+                    for (int i = 0; i<datEn.length; i++) {
+                        ram1.readChar();
+                    }
+                }
+
+                while(delimArticles) {
+
+                    char nomAr[] = new char[12];
+
+                    for (int i = 0; i<nomAr.length; i++) {
+                        ram1.readChar();
+                    }
+    
+                    ram1.readFloat();
+    
+                    char tipUn[] = new char[12];
+    
+                    for (int i = 0; i<tipUn.length; i++) {
+                        ram1.readChar();
+                    }
+    
+                    ram1.readFloat();
+    
+                    if (ram1.readUTF() == "/") {
+                        delimArticles = true;
+                    }
+
+                    ram1.readFloat();
+
+                    /*recordem que la última posició és la longitud del registre,
+                      sumem 4 ja que és el que ocupa aquest enter*/
+                    pos = pos + ram1.readInt() + 4;
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void LecturaSerial (String folder, String fileName) {
+
+        String filInputName = folder + fileName + ".dat";
+        
+        ObjectInputStream obread = null;
+
+        ArrayList<Encarrec> encarrecs = null;
+
+        try {
+            obread = new ObjectInputStream(new FileInputStream(filInputName));
+
+            encarrecs = (ArrayList<Encarrec>) obread.readObject();
+
+            for (Encarrec encarrec:encarrecs) {
+                System.out.println(encarrec);
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            // Asegúrate de cerrar el ObjectInputStream después de usarlo
+            if (obread != null) {
+                try {
+                    obread.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        
+
+    }
+
+    public static void FormatEncarrec(Encarrec encarrec) {
         System.out.printf(String.format("%n"));
         System.out.println("DETALL DE L'ENCARREC");
         System.out.println("====================================================");
         System.out.printf(String.format("%n"));
-        System.out.println("Nom del client: " + nomCli);
-        System.out.println("Telefon del client: " + telCli);
-        System.out.println("Data de l'encarrec: " + dataEncarrec);
+        System.out.println("Nom del client: " + encarrec.getNomCli());
+        System.out.println("Telefon del client: " + encarrec.getTelCli());
+        System.out.println("Data de l'encarrec: " + encarrec.getDataEncarrec());
         System.out.printf(String.format("%n"));
-        System.out.printf(String.format("%-15s %-10s %-15s%n", "Quantitat","Unitats","Article"));
-        System.out.printf(String.valueOf("=").repeat(15)+" " +String.valueOf("=").repeat(10)+" "+String.valueOf("=").repeat(15));
-        for (Article article:articles) {
+        System.out.printf(String.format("%-15s %-10s %-15s %-10s%n", "Quantitat","Unitats",
+                                        "Article","Preu unitari"));
+        System.out.printf(String.valueOf("=").repeat(15)
+                        +" "+String.valueOf("=").repeat(10)
+                        +" "+String.valueOf("=").repeat(15)
+                        +" "+String.valueOf("=").repeat(10));
+        for (Article article:encarrec.getArticles()) {
             System.out.printf(String.format("%n"));
-            System.out.printf(String.format("%-15s %-10s %-15s%n",article.getnombreUnitats(),article.gettipusUnitat(),article.getNomArticle()));
+            System.out.printf(String.format("%-15s %-10s %-15s %-10s%n",article.getnombreUnitats()
+            ,article.gettipusUnitat(),article.getNomArticle(),article.getPreuUnitat()));
         }
+        System.out.printf(String.format("%n"));
+        System.out.println("Preu total de l'encàrrec: " + encarrec.getPreuTotal());
     }
 
 }
