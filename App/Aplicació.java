@@ -10,6 +10,7 @@ import Model.Encarrec;
 
 public class Aplicació {
 
+    private static int idEnc = 0;
 
     public static void main(String[] args) {
 
@@ -134,7 +135,9 @@ public class Aplicació {
 //Calculem el preu total de l'encàrrec
         float PreuEncarrec = encarrec.CalculaPreuTotal(articles);
 
-        Encarrec enc = new Encarrec(nomCli, telCli, dataEncarrec, articles, PreuEncarrec);
+        idEnc += 1;
+
+        Encarrec enc = new Encarrec(idEnc, nomCli, telCli, dataEncarrec, articles, PreuEncarrec);
 
         return enc;
 
@@ -239,6 +242,9 @@ public class Aplicació {
         System.out.println("Especifiqueu el nom del fitxer (i sols el nom) que voleu modificar sense la seva extensió");
         System.out.println("Assegureu que el fitxer està a la carpeta: " + folder);
 
+        System.out.print("Quina és la id de l'encàrrec que voleu modificar? : ");
+        idEnc = Integer.parseInt(reader.readLine());
+
         System.out.print("Voleu modificar el telèfon? (S) o (N)");
         opcio = reader.readLine();
         if (opcio.matches("[Ss]")){
@@ -256,7 +262,7 @@ public class Aplicació {
         String fileName = reader.readLine();
 
         UtilReadFitxer ur1 = new UtilReadFitxer();
-        ur1.ModificarEncarrec(folder, fileName, nouTel, novaData);
+        ur1.ModificarEncarrec(folder, fileName, idEnc, nouTel, novaData);
 
     }
     

@@ -27,9 +27,10 @@ public class UtilReadFitxer {
             while ((linea = bwfilInp.readLine()) != null){
 
                 contingut = linea.split(";", 0);
-                String nomCli = contingut[0];
-                String telCli = contingut[1];
-                String dataEncarrec = contingut[2];
+                int id = Integer.parseInt(contingut[0]);
+                String nomCli = contingut[1];
+                String telCli = contingut[2];
+                String dataEncarrec = contingut[3];
 
                 ArrayList<Article> articles = new ArrayList<>();
 
@@ -50,7 +51,7 @@ public class UtilReadFitxer {
 
                 Float preuTotal = Float.parseFloat(contingut[j]);
 
-                Encarrec enc = new Encarrec(nomCli, telCli, dataEncarrec, articles, preuTotal);
+                Encarrec enc = new Encarrec(id, nomCli, telCli, dataEncarrec, articles, preuTotal);
 
                 FormatEncarrec(enc);
             } 
@@ -71,6 +72,7 @@ public class UtilReadFitxer {
 
             float preuTotal = 0;
 
+            int id = diStr1.readInt();
             String nomCli = diStr1.readUTF();
             String telCli = diStr1.readUTF();
             String dataEncarrec = diStr1.readUTF();
@@ -90,7 +92,7 @@ public class UtilReadFitxer {
                     }
                 }
 
-                Encarrec enc = new Encarrec(nomCli, telCli, dataEncarrec, articles, preuTotal);
+                Encarrec enc = new Encarrec(id, nomCli, telCli, dataEncarrec, articles, preuTotal);
 
                 FormatEncarrec(enc);
 
@@ -104,7 +106,7 @@ public class UtilReadFitxer {
 
     }
 
-    public void ModificarEncarrec(String folder, String fileName, String nouTel, String novaData) {
+    public void ModificarEncarrec(String folder, String fileName,int idEnc, String nouTel, String novaData) {
 
         int pos = 0;
         boolean delimArticles = false;
@@ -115,37 +117,44 @@ public class UtilReadFitxer {
 
                 ram1.seek(pos);
 
-                char nomC[] = new char[50];
+                if (idEnc == ram1.readInt()) {
+
+                    ram1.skipBytes(100);
+
+                    if (nouTel != "") {
+                        StringBuffer sbf1 = new StringBuffer(nouTel);
+                        sbf1.setLength(12);
+                        ram1.writeChars(sbf1.toString());
+                    } else {
+                        char telC[] = new char[12];
+    
+                        for (int i = 0; i<telC.length; i++) {
+                            ram1.readChar();
+                        }    
+                    }
+    
+                    if (novaData != "") {
+                        StringBuffer sbf1 = new StringBuffer(novaData);
+                        sbf1.setLength(12);
+                        ram1.writeChars(sbf1.toString());
+                    } else {
+    
+                        char datEn[] = new char[12];
+    
+                        for (int i = 0; i<datEn.length; i++) {
+                            ram1.readChar();
+                        }
+                    }
+
+                } else {
+                    ram1.skipBytes(48);
+                }
+
+/*                 char nomC[] = new char[50];
 
                 for (int i = 0; i<nomC.length; i++) {
                     ram1.readChar();
-                }
-
-                if (nouTel != "") {
-                    StringBuffer sbf1 = new StringBuffer(nouTel);
-                    sbf1.setLength(12);
-                    ram1.writeChars(sbf1.toString());
-                } else {
-                    char telC[] = new char[12];
-
-                    for (int i = 0; i<telC.length; i++) {
-                        ram1.readChar();
-                    }
-    
-                }
-
-                if (novaData != "") {
-                    StringBuffer sbf1 = new StringBuffer(novaData);
-                    sbf1.setLength(12);
-                    ram1.writeChars(sbf1.toString());
-                } else {
-
-                    char datEn[] = new char[12];
-
-                    for (int i = 0; i<datEn.length; i++) {
-                        ram1.readChar();
-                    }
-                }
+                } */
 
                 while(delimArticles) {
 

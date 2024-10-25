@@ -109,7 +109,7 @@ public class Article {
     }
 
     private void ValidatenomArticle(String nomArticle) {
-        if ((nomArticle == null) || nomArticle.matches("-?\\d+"))  {
+        if (nomArticle == null)   {
             throw new IllegalArgumentException("Nom d'article no vàlid");
         }
     }

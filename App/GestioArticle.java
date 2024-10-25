@@ -37,12 +37,38 @@ public class GestioArticle {
  
             System.out.println("Quina unitat (indicar Kg, g, ... o simplement u per unitats)? :");
 
-            String unitat = reader.readLine();
+            boolean unitatValida = false;
+
+            String unitat = "";
+
+            while(!unitatValida) {
+                
+                unitat = reader.readLine();
+
+                if (!unitat.matches("^[a-zA-Z]+$")) {
+                    System.out.println("format d'unitats no vàlides");
+                } else {
+                    unitatValida = true;
+                }
+            }
 
             System.out.println("Preu unitari (per unitat, Kg, ..) en euros? :");
 
-            float preu = Float.parseFloat(reader.readLine());
-    
+            float preu = 0;
+
+            numberValid = false;
+
+            while(!numberValid) {
+                try {
+                    preu = Float.parseFloat(reader.readLine());
+                    numberValid = true;
+                   
+               } catch (Exception e) {
+                   System.out.println("Format de preu no vàlid, torneu a introduir la quantitat fent servir nombres");
+               }
+
+            }
+
             Article article = new Article(nomArticle,quantitat, unitat, preu);
     
             LlistaArticle.add(article);

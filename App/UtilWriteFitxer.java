@@ -58,8 +58,11 @@ public class UtilWriteFitxer {
      */
         try (BufferedWriter bw1 = new BufferedWriter(new FileWriter(fileName))){
 
+            GestioEncarrec genc = new GestioEncarrec();
+
             for(Encarrec encarrec:encarrecs){
-                bw1.write(encarrec.toCSV());
+
+                bw1.write(genc.toCSV(encarrec));
             }
             
         } catch (Exception e) {

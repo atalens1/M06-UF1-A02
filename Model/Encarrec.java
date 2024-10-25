@@ -3,13 +3,15 @@ import java.util.ArrayList;
 
 public class Encarrec {
 
+    private int id;   
     private String nomCli;
     private String telCli;
     private String dataEncarrec;
     private ArrayList<Article> articles;
     private float PreuTotal;
 
-    public Encarrec(String nomCli, String telCli, String dataEncarrec, ArrayList<Article> articles, float PreuTotal) {
+    public Encarrec(int id, String nomCli, String telCli, String dataEncarrec, ArrayList<Article> articles, float PreuTotal) {
+        this.id = id;
         this.nomCli = nomCli;
         this.telCli = telCli;
         this.dataEncarrec = dataEncarrec;
@@ -17,6 +19,14 @@ public class Encarrec {
         this.PreuTotal = PreuTotal;
     }
 
+    public int getId() {
+        return id;
+    }
+
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getNomCli() {
         return nomCli;
@@ -69,22 +79,8 @@ public class Encarrec {
 
     @Override
     public String toString() {
-        return "Encarrec [nomCli=" + nomCli + ", telCli=" + telCli + ", dataEncarrec=" + dataEncarrec + ", articles="
-                + articles + "]";
-    }
-
-    public String toCSV() {
-        StringBuilder cliDet = new StringBuilder();
-        cliDet.append(nomCli).append(";")
-              .append(telCli).append(";")
-              .append(dataEncarrec).append(";");
-    
-        // Usar StringBuilder para añadir cada artículo
-        articles.forEach(article -> cliDet.append(article.toCSV()));
-
-        cliDet.append(";").append(PreuTotal).append(";");
-    
-        return cliDet.toString();
+        return "Encarrec [id=" + id + ", nomCli=" + nomCli + ", telCli=" + telCli + ", dataEncarrec=" + dataEncarrec
+                + ", articles=" + articles + ", PreuTotal=" + PreuTotal + "]";
     }
 
 }
