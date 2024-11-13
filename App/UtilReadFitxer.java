@@ -187,10 +187,6 @@ public class UtilReadFitxer {
 
                     Article art1 = new Article(nomArtic,quantitat,tipusUni,preuUnitat);
                     articles.add(art1);
-    
-/*                     if (ram1.readUTF() != "/") {
-                        delimArticles = false;
-                    } */
 
                 }
 
@@ -201,7 +197,10 @@ public class UtilReadFitxer {
 
                 /*recordem que la última posició és la longitud del registre,
                 sumem 4 ja que és el que ocupa aquest enter*/
-                pos = pos + ram1.readInt() + 4;
+                int lengRec = ram1.readInt();
+                System.out.println("long: "+ lengRec);
+                pos = pos + lengRec + 4;
+                System.out.println("pos: "+pos);
         
             }
 
@@ -211,99 +210,6 @@ public class UtilReadFitxer {
 
     }
 
-    public void ModificarEncarrec(String folder, String fileName,int idEnc, String nouTel, String novaData) {
-
-        int pos = 0;
-
-        String filInputName = folder + fileName + ".dat";
-
-        try (RandomAccessFile ram1 = new RandomAccessFile(filInputName, "rw")) {
-
-            while(ram1.getFilePointer() != ram1.length()){
-
-                ram1.seek(pos);
-
-                if (idEnc == ram1.readInt()) {
-
-                    ram1.skipBytes(100);
-
-                    if (nouTel != "") {
-                        StringBuffer sbf1 = new StringBuffer(nouTel);
-                        sbf1.setLength(12);
-                        ram1.writeChars(sbf1.toString());
-                    } else {
-                        char telC[] = new char[12];
-    
-                        for (int i = 0; i<telC.length; i++) {
-                            ram1.readChar();
-                        }    
-                    }
-    
-                    if (novaData != "") {
-                        StringBuffer sbf1 = new StringBuffer(novaData);
-                        sbf1.setLength(12);
-                        ram1.writeChars(sbf1.toString());
-                    } else {
-    
-                        char datEn[] = new char[12];
-    
-                        for (int i = 0; i<datEn.length; i++) {
-                            ram1.readChar();
-                        }
-                    }
-
-                } else {
-                    ram1.skipBytes(48);
-                }
-
-                //preu total
-                ram1.skipBytes(4);       
-
-                //mida de l'array d'articles
-                int size = ram1.readInt();
-                            
-                            //Llista d'articles de l'encarrec    
-                //                while(delimArticles) {
-                                
-
-/*                 char nomC[] = new char[50];
-
-                for (int i = 0; i<nomC.length; i++) {
-                    ram1.readChar();
-                } */
-
-                for (int j = 0; j<size; j++) {
-                    //Mida total de cada article: 68 posicions fixes.
-                    //en bytes: 50*2 + 4 + 10*2 + 4
-                    ram1.skipBytes(118);
-
- /*                    char nomAr[] = new char[50];
-
-                    for (int i = 0; i<nomAr.length; i++) {
-                        ram1.readChar();
-                    }
-    
-                    ram1.readFloat();
-    
-                    char tipUn[] = new char[10];
-    
-                    for (int i = 0; i<tipUn.length; i++) {
-                        ram1.readChar();
-                    }
-    
-                    ram1.readFloat(); */
-                }
-
-                /*recordem que la última posició és la longitud del registre,
-                  sumem 4 ja que és el que ocupa aquest enter*/
-                pos = pos + ram1.readInt() + 4;
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
     
     @SuppressWarnings("unchecked")
     public void LecturaSerial (String folder, String fileName) {

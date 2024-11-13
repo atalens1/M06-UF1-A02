@@ -165,6 +165,7 @@ public class UtilWriteFitxer {
                 longRecord += "/".length() * 2; //pensem que UTF ocupa a més 2 bytes per indicar la llargària */
     
                 //escrivim la longitud del registre
+                System.out.println("longrecord: "+longRecord);
                 raw1.writeInt(longRecord);
             }
 

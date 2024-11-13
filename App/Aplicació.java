@@ -274,10 +274,8 @@ public class Aplicació {
             novaData = reader.readLine();
         }
 
-
-
-        UtilReadFitxer ur1 = new UtilReadFitxer();
-        ur1.ModificarEncarrec(folder, fileName, idEnc, nouTel, novaData);
+        UtilModifFitxer um1 = new UtilModifFitxer();
+        um1.ModificarEncarrec(folder, fileName, idEnc, nouTel, novaData);
 
     }
     
