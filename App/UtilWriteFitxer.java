@@ -106,8 +106,13 @@ public class UtilWriteFitxer {
 
                 int longRecord = 0;
 
+    //escrivim la id de l'encarrec
+                raw1.writeInt(encarrec.getId());
+                longRecord += 4;  //4 bytes un float
+
                 StringBuffer sbf1 = null;
 
+    //escrivim el nom del client            
                 sbf1 = new StringBuffer(encarrec.getNomCli());
                 sbf1.setLength(50);
                 raw1.writeChars(sbf1.toString());
@@ -128,6 +133,13 @@ public class UtilWriteFitxer {
                 sbf1.setLength(12);
                 raw1.writeChars(sbf1.toString());
                 longRecord += sbf1.toString().length() * 2; //2 bytes per cada char escrit.
+
+                raw1.writeFloat(encarrec.getPreuTotal());
+                longRecord += 4;  //4 bytes un float
+
+                int sizeArticles = encarrec.getArticles().size();
+                raw1.writeInt(sizeArticles);
+                longRecord += 4;
     
                 for (Article art:encarrec.getArticles()) {
                     sbf1 = new StringBuffer(art.getNomArticle());
@@ -141,19 +153,17 @@ public class UtilWriteFitxer {
                     sbf1 = new StringBuffer(art.gettipusUnitat());
                     sbf1.setLength(10);
                     raw1.writeChars(sbf1.toString());
-                    longRecord += sbf1.toString().length() * 2; //2 bytes per cada char escrit.
+                    longRecord += sbf1.toString().length() * 2; //2 bytes per cada char escrit.               
+
     
                     raw1.writeFloat(art.getPreuUnitat());
                     longRecord += 4;  //4 bytes un float
                 }
                 /*com no sabem la longitud, fem servir un marcador que ens indiqui on acaba
                 l'array d'articles*/
-                raw1.writeUTF("/");
-                longRecord += "/".length() * 2; //pensem que UTF ocupa a més 2 bytes per indicar la llargària
+/*                 raw1.writeUTF("/");
+                longRecord += "/".length() * 2; //pensem que UTF ocupa a més 2 bytes per indicar la llargària */
     
-                raw1.writeFloat(encarrec.getPreuTotal());
-                longRecord += 4;  //4 bytes un float
-
                 //escrivim la longitud del registre
                 raw1.writeInt(longRecord);
             }

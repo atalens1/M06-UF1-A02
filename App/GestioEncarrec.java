@@ -12,6 +12,8 @@ public class GestioEncarrec {
         float PreuTotal = 0;
 
         for (Article art:articles) {
+            System.out.println("nom un: "+art.getnombreUnitats());
+            System.out.println("preu un: "+art.getPreuUnitat());
             PreuTotal = PreuTotal + art.getnombreUnitats()*art.getPreuUnitat();
         }
 

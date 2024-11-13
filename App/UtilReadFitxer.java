@@ -106,12 +106,118 @@ public class UtilReadFitxer {
 
     }
 
+    public void LecturaAleatoria(String folder, String fileName) {
+
+        int pos = 0;
+        char aux;
+
+        String filInputName = folder + fileName + ".dat";
+
+        try (RandomAccessFile ram1 = new RandomAccessFile(filInputName, "r")) {
+
+            while(ram1.getFilePointer() != ram1.length()){
+
+                ArrayList<Article> articles = new ArrayList<>();
+
+                ram1.seek(pos);
+            //Id de l'encarrec
+                int idEnc = ram1.readInt();
+
+            //Nom del client
+                char nomC[] = new char[50];
+
+                for (int i = 0; i<nomC.length; i++) {
+                    aux = ram1.readChar();
+                    nomC[i] = aux;
+                }
+
+                String nomCli = new String(nomC).trim();
+
+            //Telefon del client
+                char telC[] = new char[12];
+    
+                for (int i = 0; i<telC.length; i++) {
+                    aux = ram1.readChar();
+                    telC[i] = aux;
+                } 
+                
+                String telCli = new String(telC).trim();
+
+            //Data d'encarrec
+                char datEn[] = new char[12];
+    
+                for (int i = 0; i<datEn.length; i++) {
+                    aux = ram1.readChar();
+                    datEn[i] = aux;
+                }
+
+                String DataEnc = new String(datEn).trim();
+
+            //preu total
+                float preuTot = ram1.readFloat();
+
+            //mida de l'array d'articles
+                int size = ram1.readInt();
+            
+            //Llista d'articles de l'encarrec    
+//                while(delimArticles) {
+                for (int j = 0; j<size; j++) {
+
+                    char nomAr[] = new char[50];
+
+                    for (int i = 0; i<nomAr.length; i++) {
+                        aux = ram1.readChar();
+                        nomAr[i] = aux;
+                    }
+
+                    String nomArtic = new String(nomAr).trim();
+    
+                    float quantitat = ram1.readFloat();
+    
+                    char tipUn[] = new char[10];
+    
+                    for (int i = 0; i<tipUn.length; i++) {
+                        aux = ram1.readChar();
+                        tipUn[i] = aux;
+                    }
+
+                    String tipusUni = new String(tipUn).trim();
+    
+                    float preuUnitat = ram1.readFloat();
+
+                    Article art1 = new Article(nomArtic,quantitat,tipusUni,preuUnitat);
+                    articles.add(art1);
+    
+/*                     if (ram1.readUTF() != "/") {
+                        delimArticles = false;
+                    } */
+
+                }
+
+                Encarrec encarrec = new Encarrec(idEnc, nomCli, telCli, DataEnc, articles, preuTot);
+                System.out.println(encarrec.toString());
+
+                FormatEncarrec(encarrec);
+
+                /*recordem que la última posició és la longitud del registre,
+                sumem 4 ja que és el que ocupa aquest enter*/
+                pos = pos + ram1.readInt() + 4;
+        
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void ModificarEncarrec(String folder, String fileName,int idEnc, String nouTel, String novaData) {
 
         int pos = 0;
-        boolean delimArticles = false;
 
-        try (RandomAccessFile ram1 = new RandomAccessFile(fileName, "rw")) {
+        String filInputName = folder + fileName + ".dat";
+
+        try (RandomAccessFile ram1 = new RandomAccessFile(filInputName, "rw")) {
 
             while(ram1.getFilePointer() != ram1.length()){
 
@@ -150,15 +256,28 @@ public class UtilReadFitxer {
                     ram1.skipBytes(48);
                 }
 
+                //preu total
+                ram1.skipBytes(4);       
+
+                //mida de l'array d'articles
+                int size = ram1.readInt();
+                            
+                            //Llista d'articles de l'encarrec    
+                //                while(delimArticles) {
+                                
+
 /*                 char nomC[] = new char[50];
 
                 for (int i = 0; i<nomC.length; i++) {
                     ram1.readChar();
                 } */
 
-                while(delimArticles) {
+                for (int j = 0; j<size; j++) {
+                    //Mida total de cada article: 68 posicions fixes.
+                    //en bytes: 50*2 + 4 + 10*2 + 4
+                    ram1.skipBytes(118);
 
-                    char nomAr[] = new char[12];
+ /*                    char nomAr[] = new char[50];
 
                     for (int i = 0; i<nomAr.length; i++) {
                         ram1.readChar();
@@ -166,24 +285,18 @@ public class UtilReadFitxer {
     
                     ram1.readFloat();
     
-                    char tipUn[] = new char[12];
+                    char tipUn[] = new char[10];
     
                     for (int i = 0; i<tipUn.length; i++) {
                         ram1.readChar();
                     }
     
-                    ram1.readFloat();
-    
-                    if (ram1.readUTF() == "/") {
-                        delimArticles = true;
-                    }
-
-                    ram1.readFloat();
-
-                    /*recordem que la última posició és la longitud del registre,
-                      sumem 4 ja que és el que ocupa aquest enter*/
-                    pos = pos + ram1.readInt() + 4;
+                    ram1.readFloat(); */
                 }
+
+                /*recordem que la última posició és la longitud del registre,
+                  sumem 4 ja que és el que ocupa aquest enter*/
+                pos = pos + ram1.readInt() + 4;
             }
 
         } catch (IOException e) {

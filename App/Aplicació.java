@@ -68,7 +68,8 @@ public class Aplicació {
                     break;
                 
                 case "3":
-
+                    ModificarEncarrec(reader1);
+                    break;
 
                 case "4":
 
@@ -130,10 +131,12 @@ public class Aplicació {
         ArrayList<Article> articles = articleList.AfegirArticles(reader);
 
 //Cridem a la classe encarregada de gestionar l'encàrrec
-        GestioEncarrec encarrec = new GestioEncarrec();
+        GestioEncarrec gencarrec = new GestioEncarrec();
 
 //Calculem el preu total de l'encàrrec
-        float PreuEncarrec = encarrec.CalculaPreuTotal(articles);
+        float PreuEncarrec = gencarrec.CalculaPreuTotal(articles);
+
+        System.out.println("Preu Total: "+PreuEncarrec);
 
         idEnc += 1;
 
@@ -211,7 +214,8 @@ public class Aplicació {
         System.out.println("Quin tipus de fitxer voleu obrir?");
         System.out.println("1. Fitxer .csv");
         System.out.println("2. Fitxer binari .dat");
-        System.out.println("3. Serialitzat .dat");
+        System.out.println("3. Fitxer acces aleatori .dat");
+        System.out.println("4. Serialitzat .dat");
 
         String opcio = reader.readLine();
         
@@ -222,14 +226,23 @@ public class Aplicació {
 
         UtilReadFitxer ur1 = new UtilReadFitxer();
 
-        if (opcio.equals("1")) {
-            ur1.FormatCSV(folder, fileName);
-        } else if (opcio.equals("2")) {
-            ur1.FormatBinari(folder, fileName);
-        } else if (opcio.equals("3")) {
-            ur1.LecturaSerial(folder, fileName);
+        switch (opcio) {
+            case "1":
+                ur1.FormatCSV(folder, fileName);
+                break;
+            case "2":
+                ur1.FormatBinari(folder, fileName);
+                break;
+            case "3":
+                ur1.LecturaAleatoria(folder, fileName);
+                break;
+            case "4":
+                ur1.LecturaSerial(folder, fileName);
+                break;
+            default:
+                break;
         }
-
+        
     }
 
     public static void ModificarEncarrec(BufferedReader reader) throws IOException {
@@ -241,6 +254,8 @@ public class Aplicació {
 
         System.out.println("Especifiqueu el nom del fitxer (i sols el nom) que voleu modificar sense la seva extensió");
         System.out.println("Assegureu que el fitxer està a la carpeta: " + folder);
+
+        String fileName = reader.readLine();
 
         System.out.print("Quina és la id de l'encàrrec que voleu modificar? : ");
         idEnc = Integer.parseInt(reader.readLine());
@@ -259,7 +274,7 @@ public class Aplicació {
             novaData = reader.readLine();
         }
 
-        String fileName = reader.readLine();
+
 
         UtilReadFitxer ur1 = new UtilReadFitxer();
         ur1.ModificarEncarrec(folder, fileName, idEnc, nouTel, novaData);
