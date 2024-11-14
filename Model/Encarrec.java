@@ -1,7 +1,10 @@
 package Model;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Encarrec {
+public class Encarrec implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int id;   
     private String nomCli;

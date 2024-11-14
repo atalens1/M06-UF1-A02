@@ -159,13 +159,10 @@ public class UtilWriteFitxer {
                     raw1.writeFloat(art.getPreuUnitat());
                     longRecord += 4;  //4 bytes un float
                 }
-                /*com no sabem la longitud, fem servir un marcador que ens indiqui on acaba
-                l'array d'articles*/
-/*                 raw1.writeUTF("/");
+
                 longRecord += "/".length() * 2; //pensem que UTF ocupa a més 2 bytes per indicar la llargària */
     
                 //escrivim la longitud del registre
-                System.out.println("longrecord: "+longRecord);
                 raw1.writeInt(longRecord);
             }
 

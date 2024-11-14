@@ -74,14 +74,12 @@ public class Aplicació {
                 case "4":
 
                     break;
-
-            
                 default:
                     System.out.println("Opció no vàlida");
                     ValidOpt = false;
             }
 
-            if (!(opcio.equals("3"))) {
+            if (!(opcio.equals("4"))) {
 
                 String continuar = "";
 
@@ -136,16 +134,11 @@ public class Aplicació {
 //Calculem el preu total de l'encàrrec
         float PreuEncarrec = gencarrec.CalculaPreuTotal(articles);
 
-        System.out.println("Preu Total: "+PreuEncarrec);
-
         idEnc += 1;
 
         Encarrec enc = new Encarrec(idEnc, nomCli, telCli, dataEncarrec, articles, PreuEncarrec);
 
         return enc;
-
-//Fem l'escriptura als fitxers
-//        EscriureFitxers(reader, nomCli, telCli, dataEncarrec, articles, PreuEncarrec);
 
     }
 
@@ -176,8 +169,6 @@ public class Aplicació {
                 break;
             
             case "2": 
-                // Encarrec encarrec = new Encarrec(nomCli, telCli, dataEncarrec, articles);
-                // csvLineaObjEn(encarrec, fileName);
                 extensio = ".csv";
                 fileName = fileName.concat(extensio);
                 uw1.csvLineaObjEn(encarrecs,fileName);
@@ -221,6 +212,8 @@ public class Aplicació {
         
         System.out.println("Especifiqueu el nom del fitxer (i sols el nom) que voleu obrir sense la seva extensió");
         System.out.println("Assegureu que el fitxer està a la carpeta: " + folder);
+        
+        System.out.print("Nom del fitxer: ");
 
         String fileName = reader.readLine();
 
@@ -254,6 +247,8 @@ public class Aplicació {
 
         System.out.println("Especifiqueu el nom del fitxer (i sols el nom) que voleu modificar sense la seva extensió");
         System.out.println("Assegureu que el fitxer està a la carpeta: " + folder);
+
+        System.out.print("Nom del fitxer: ");
 
         String fileName = reader.readLine();
 

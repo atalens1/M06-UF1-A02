@@ -191,17 +191,14 @@ public class UtilReadFitxer {
                 }
 
                 Encarrec encarrec = new Encarrec(idEnc, nomCli, telCli, DataEnc, articles, preuTot);
-                System.out.println(encarrec.toString());
 
                 FormatEncarrec(encarrec);
 
                 /*recordem que la última posició és la longitud del registre,
                 sumem 4 ja que és el que ocupa aquest enter*/
                 int lengRec = ram1.readInt();
-                System.out.println("long: "+ lengRec);
                 pos = pos + lengRec + 4;
-                System.out.println("pos: "+pos);
-        
+    
             }
 
         } catch (IOException e) {
@@ -226,7 +223,7 @@ public class UtilReadFitxer {
             encarrecs = (ArrayList<Encarrec>) obread.readObject();
 
             for (Encarrec encarrec:encarrecs) {
-                System.out.println(encarrec);
+                FormatEncarrec(encarrec);
             }
 
         } catch (FileNotFoundException e) {
@@ -252,7 +249,7 @@ public class UtilReadFitxer {
 
     public static void FormatEncarrec(Encarrec encarrec) {
         System.out.printf(String.format("%n"));
-        System.out.println("DETALL DE L'ENCARREC");
+        System.out.println("DETALL DE L'ENCARREC número: " + encarrec.getId());
         System.out.println("====================================================");
         System.out.printf(String.format("%n"));
         System.out.println("Nom del client: " + encarrec.getNomCli());

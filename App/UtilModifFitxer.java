@@ -38,7 +38,8 @@ public class UtilModifFitxer {
                     }
 
                 } else {
-                    ram1.skipBytes(48);
+                    //skip del nom del client, data encarrec i telefon junts
+                    ram1.skipBytes(148);
                 }
 
                 //preu total
